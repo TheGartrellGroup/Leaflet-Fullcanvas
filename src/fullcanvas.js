@@ -31,7 +31,7 @@ if (typeof(L) !== 'undefined') {
         onAdd: function (map) {
             this._myMap = map;
             if (!map._panes.staticPane) {
-                map._panes.staticPane = map._createPane('leaflet-tile-pane', map._container);
+                map._panes.staticPane = map._createPane('leaflet-tile-pane points', map._panes.mapPane);
             }
             this._staticPane = map._panes.staticPane
             this._staticPane.appendChild(this._myCanvas);
