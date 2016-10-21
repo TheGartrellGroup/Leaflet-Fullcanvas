@@ -36,6 +36,8 @@ if (typeof(L) !== 'undefined') {
             this._staticPane = map._panes.staticPane
             this._staticPane.appendChild(this._myCanvas);
             map.on('viewreset', this.canvasReset, this);
+            map.on('zoomstart', this.startZoom, this);
+            map.on('zoomend', this.endZoom, this);
             map.on('move', this.canvasReset, this);
             map.on('resize', this.canvasReset, this);
             map.on('click', this.handleClick, this);
@@ -64,6 +66,14 @@ if (typeof(L) !== 'undefined') {
 
         getOptions: function () {
             return this.options;
+        },
+        startZoom: function() {
+            this._myCanvas.style.visibility = 'hidden';
+            this.zooming = true;
+        },
+        endZoom: function() {
+            this._myCanvas.style.visibility = 'visible';
+            this.zooming = false;
         },
         canvasReset: function(){
             var size = this._myMap.getSize();
