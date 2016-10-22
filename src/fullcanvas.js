@@ -35,10 +35,19 @@ if (typeof(L) !== 'undefined') {
             }
             this._staticPane = map._panes.staticPane
             this._staticPane.appendChild(this._myCanvas);
+
+            if (this._myMap.dragging.enabled()) {
+                map.dragging._draggable.on('predrag', function() {
+                    var d = map.dragging._draggable;
+                    L.DomUtil.setPosition(this._myCanvas, { x: -d._newPos.x, y: -d._newPos.y });
+                }, this);
+            }
+
             map.on('viewreset', this.canvasReset, this);
             map.on('zoomstart', this.startZoom, this);
             map.on('zoomend', this.endZoom, this);
-            map.on('move', this.canvasReset, this);
+            map.on('dragstart', this.startDrag, this);
+            map.on('dragend', this.endDrag, this);
             map.on('resize', this.canvasReset, this);
             map.on('click', this.handleClick, this);
             this.canvasReset();
@@ -74,6 +83,13 @@ if (typeof(L) !== 'undefined') {
         endZoom: function() {
             this._myCanvas.style.visibility = 'visible';
             this.zooming = false;
+        },
+        startDrag: function(){
+            this._myCanvas.style.visibility = 'hidden';
+        },
+        endDrag: function(){
+            this._myCanvas.style.visibility = 'visible';
+            this.canvasReset();
         },
         canvasReset: function(){
             var size = this._myMap.getSize();
