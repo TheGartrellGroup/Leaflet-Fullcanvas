@@ -30,26 +30,19 @@ if (typeof(L) !== 'undefined') {
         },
         onAdd: function (map) {
             this._myMap = map;
-            if (!map._panes.staticPane) {
-                map._panes.staticPane = map._createPane('leaflet-tile-pane points', map._panes.mapPane);
+
+            if (!this._myMap._panes.staticPane) {
+                this._myMap._panes.staticPane = this._myMap._createPane('leaflet-tile-pane points', this._myMap._panes.objectsPane);
             }
-            this._staticPane = map._panes.staticPane
+            this._staticPane = this._myMap._panes.staticPane
             this._staticPane.appendChild(this._myCanvas);
 
-            if (this._myMap.dragging.enabled()) {
-                map.dragging._draggable.on('predrag', function() {
-                    var d = map.dragging._draggable;
-                    L.DomUtil.setPosition(this._myCanvas, { x: -d._newPos.x, y: -d._newPos.y });
-                }, this);
-            }
-
-            map.on('viewreset', this.canvasReset, this);
-            map.on('zoomstart', this.startZoom, this);
-            map.on('zoomend', this.endZoom, this);
-            map.on('dragstart', this.startDrag, this);
-            map.on('dragend', this.endDrag, this);
-            map.on('resize', this.canvasReset, this);
-            map.on('click', this.handleClick, this);
+            this._myMap.on('viewreset', this.canvasReset, this);
+            this._myMap.on('zoomstart', this.startZoom, this);
+            this._myMap.on('zoomend', this.endZoom, this);
+            this._myMap.on('moveend', this.canvasReset, this);
+            this._myMap.on('resize', this.canvasReset, this);
+            this._myMap.on('click', this.handleClick, this);
             this.canvasReset();
         },
         handleClick: function(e) {
@@ -84,15 +77,11 @@ if (typeof(L) !== 'undefined') {
             this._myCanvas.style.visibility = 'visible';
             this.zooming = false;
         },
-        startDrag: function(){
-            this._myCanvas.style.visibility = 'hidden';
-        },
-        endDrag: function(){
-            this._myCanvas.style.visibility = 'visible';
-            this.canvasReset();
-        },
         canvasReset: function(){
             var size = this._myMap.getSize();
+            var lyrPt = this._myMap.containerPointToLayerPoint([0, 0]);
+            this._myCanvas.style.top = lyrPt.y+'px';
+            this._myCanvas.style.left = lyrPt.x+'px';
             this._myCanvas.width = size.x;
             this._myCanvas.height = size.y;
             this.drawCanvas();
