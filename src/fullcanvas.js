@@ -46,7 +46,7 @@ if (typeof(L) !== 'undefined') {
             this.canvasReset();
         },
         handleClick: function(e) {
-            var j = e.containerPoint
+            var j = this._myMap.latLngToContainerPoint(e.latlng);
             var bounds = L.latLngBounds(map.containerPointToLatLng(j.add(L.point(5,5))), map.containerPointToLatLng(j.subtract(L.point(5,5))))
             var points = this._myQuad.retrieveInBounds(this.boundsToQuery(bounds));
             if(points.length > 0)
