@@ -31,9 +31,7 @@ if (typeof(L) !== 'undefined') {
         onAdd: function (map) {
             this._myMap = map;
 
-            if (!this._myMap._panes.staticPane) {
-                this._myMap._panes.staticPane = this._myMap._createPane('leaflet-tile-pane points', this._myMap._panes.objectsPane);
-            }
+            this._myMap._panes.staticPane = this._myMap._createPane('leaflet-tile-pane points', this._myMap._panes.objectsPane);
             this._staticPane = this._myMap._panes.staticPane
             this._staticPane.appendChild(this._myCanvas);
 
@@ -87,7 +85,7 @@ if (typeof(L) !== 'undefined') {
             this.drawCanvas();
         },
         onRemove: function (map) {
-            map._container.removeChild(this._staticPane);
+            map._panes.objectsPane.removeChild(this._staticPane);
             map.off('viewreset', this.canvasReset, this);
             map.off('move', this.canvasReset, this);
             map.off('resize', this.canvasReset, this);
