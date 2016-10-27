@@ -52,6 +52,8 @@ if (typeof(L) !== 'undefined') {
         },
         clickedPoints: function(points, e){
         },
+        filter: function(points) {
+        },
         addLayerTo: function (map) {
             map.addLayer(this);
             return this;
@@ -114,6 +116,9 @@ if (typeof(L) !== 'undefined') {
             var b = this._myMap.getBounds();
             if (!this.options.filterPointsInBounds) b = new L.LatLngBounds([-90, -180], [90,180]);
             var points = this._myQuad.retrieveInBounds(this.boundsToQuery(b));
+            if (this.options.filter && typeof(this.options.filter) === "object") {
+                points = this.filter(points);
+            }
             points.forEach(function(point){
                 var d = point.data;
                 if (d.draw && !d.draw(d)) return;    // allows dynamic filtering of curves
